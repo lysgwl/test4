@@ -30,8 +30,8 @@ kernel = cv.getStructuringElement(cv.MORPH_RECT, (21, 7))
 closed = cv.morphologyEx(thresh, cv.MORPH_CLOSE, kernel)
 
 #
-closed = cv.erode(closed, None, iterations = 6)
-closed = cv.dilate(closed, None, iterations = 6)
+closed = cv.erode(closed, None, iterations = 9)
+closed = cv.dilate(closed, None, iterations = 9)
 
 #
 (_, cnts, _,) = cv.findContours(closed.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
@@ -42,6 +42,6 @@ rect = cv.minAreaRect(c)
 box = np.int0(cv.boxPoints(rect))
 
 #
-cv.drawContours(image, [box], -1, (0, 255, 0), 3)
-cv.imshow("Image", image)
+cv.drawContours(image, [box], -1, (255, 0, 0), 5)
+#cv.imshow("Image", image)
 cv.waitKey(0)
