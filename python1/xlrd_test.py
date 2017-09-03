@@ -1,5 +1,6 @@
 #coding=utf-8 
 from xlrd import open_workbook
+#from __future__ import print_function
 
 #from collections import OrderedDict  
 #from pyexcel_xls import get_data  
@@ -38,11 +39,29 @@ def read_xls_file2():
 		#print sheet.row(0)[0].value.encode('gbk')
 		#print sheet.cell(0,0).ctype
 		
+		pre_row = 0
 		for row in range(sheet.nrows):
 			for col in range(sheet.ncols):
-				print 
-		#	rows = sheet.row_values(row)		
-		#	print row, ":", rows
+				type = sheet.cell_type(row,col)
+				value = sheet.cell(row,col).value;
+
+				if row != pre_row:
+					print
+				pre_row = row
+				#print "321", "#", row, pre_row,type,value,
+				
+				if type == 0 or value == '':
+					if col == (sheet.ncols - 1):
+						print
+					continue
+					
+				if type == 1:
+					value = value.encode('gbk')
+				
+				if col == (sheet.ncols - 1):
+					print('%d-%d'%(row,col)), ":", value
+				else:
+					print('%d-%d'%(row,col)), ":", value,
 		index = index + 1
 
 if __name__ == '__main__': 
