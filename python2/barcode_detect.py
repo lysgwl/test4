@@ -43,5 +43,5 @@ box = np.int0(cv.boxPoints(rect))
 
 #
 cv.drawContours(image, [box], -1, (255, 0, 0), 5)
-#cv.imshow("Image", image)
+cv.imshow("Image", image)
 cv.waitKey(0)

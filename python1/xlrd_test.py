@@ -10,7 +10,7 @@ def read_xls_file1():
 	x_data1=[]
 	y_data1=[]
 
-	wb = open_workbook('1.xlsx')
+	wb = open_workbook('d:\\1.xlsx')
 
 	for s in wb.sheets():
 		print 'Sheet:',s.name
@@ -22,9 +22,9 @@ def read_xls_file1():
 			print values
 			x_data1.append(values[0])
 			y_data1.append(values[1])
-	
+
 def read_xls_file2():
-	wb = open_workbook('1.xlsx')
+	wb = open_workbook('d:\\1.xlsx')
 	print wb.sheet_names()
 	
 	index = 0
