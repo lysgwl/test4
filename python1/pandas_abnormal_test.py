@@ -1,16 +1,21 @@
 #-*- coding: utf-8 -*-
-
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
-catering_data='2.xls'
+abs_path = os.path.abspath(__file__)
+current_path = os.path.dirname(abs_path)
+file_path = os.path.abspath(os.path.join(current_path, '2.xls'))
+
+catering_data=file_path
+
 #s1='日期'
 #s1.decode('utf-8').encode('gbk')
+
 data = pd.read_excel(catering_data, index_col=u'日期')
 
 plt.rcParams['font.sans-serif'] = ['SimHei']
 plt.rcParams['axes.unicode_minus'] = False
-
 plt.figure()
 
 p = data.boxplot(return_type='dict')

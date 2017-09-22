@@ -76,7 +76,7 @@ part2_test2()
 
 #def part2_test3():
 
-#python  ÅäÖÃÎÄ¼ş½âÎö
+#python  é…ç½®æ–‡ä»¶è§£æ
 #part3:
 def dirlist(dirpath, filelist):
 	list = os.listdir(dirpath)	

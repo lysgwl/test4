@@ -1,4 +1,6 @@
 #coding=utf-8 
+
+import os
 from xlrd import open_workbook
 #from __future__ import print_function
 
@@ -6,11 +8,15 @@ from xlrd import open_workbook
 #from pyexcel_xls import get_data  
 #from pyexcel_xls import save_data  
 
+abs_path = os.path.abspath(__file__)
+current_path = os.path.dirname(abs_path)
+file_path = os.path.abspath(os.path.join(current_path, '1.xlsx'))
+
 def read_xls_file1():
 	x_data1=[]
 	y_data1=[]
 
-	wb = open_workbook('d:\\1.xlsx')
+	wb = open_workbook(file_path)
 
 	for s in wb.sheets():
 		print 'Sheet:',s.name
@@ -24,7 +30,7 @@ def read_xls_file1():
 			y_data1.append(values[1])
 
 def read_xls_file2():
-	wb = open_workbook('d:\\1.xlsx')
+	wb = open_workbook(file_path)
 	print wb.sheet_names()
 	
 	index = 0
