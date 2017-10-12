@@ -72,4 +72,4 @@ def read_xls_file2():
 
 if __name__ == '__main__': 
 	#read_xls_file1()
-	read_xls_file2()
+	#read_xls_file2()

@@ -107,6 +107,7 @@ def main():
 	#numpy_test_part2()
 	#numpy_test_part3()
 	#numpy_test_part4()
-	numpy_test_part5()
+	#numpy_test_part5()
+	
 if __name__=='__main__':
 	main()

@@ -19,6 +19,7 @@ def main():
 if __name__=='__main__':
 	main()
 '''
+
 '''
 #part2:
 a = 123 #10-2
@@ -36,6 +37,7 @@ a1 = part2_test1(101)
 print (a1)	
 '''
 
+'''
 def part2_test2():
 	str1 = "this is a test!"
 	s1 = str1.split(' ')	
@@ -76,7 +78,6 @@ def part2_test2():
 	for nIndex in elements:
 		print ("elements array is:%d" % nIndex)
 part2_test2()
-
 
 #def part2_test3():
 '''

@@ -29,7 +29,7 @@ def scipy_test_part3():
 	print(pi_2 * 2) #由微积分知识知道积分结果为圆周率pi的一半
 	
 def main():
-	scipy_test_part1()
+	#scipy_test_part1()
 	#scipy_test_part2()
 	#scipy_test_part3()
 	#scipy_test_part4()
