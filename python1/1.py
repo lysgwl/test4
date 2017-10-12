@@ -21,18 +21,20 @@ if __name__=='__main__':
 '''
 '''
 #part2:
-a = 10-2
+a = 123 #10-2
 print ("the value is : %s" % a)
-
+'''
+'''
 def part2_test1(param1):
 	n1 = param1 + 1;
 	n2 = n1 + 1;
 	n3 = n2 + 1;
 	print ("value : %d,%d,%d"%(n1,n2,n3))
-	return n1,n2,n3
+	return n1,n2,n3,'123'
 
 a1 = part2_test1(101)
 print (a1)	
+'''
 
 def part2_test2():
 	str1 = "this is a test!"
@@ -74,10 +76,12 @@ def part2_test2():
 	for nIndex in elements:
 		print ("elements array is:%d" % nIndex)
 part2_test2()
-'''
+
 
 #def part2_test3():
+'''
 
+'''
 #python  配置文件解析
 #part3:
 def dirlist(dirpath, filelist):
@@ -163,3 +167,4 @@ class Student(object):
 		self._birth = value
 	def age(self):
 		return 2014-self._birth
+'''

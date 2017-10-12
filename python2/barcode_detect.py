@@ -1,14 +1,24 @@
+import os
 import numpy as np
 import cv2 as cv
 import argparse
 
-#
-ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", required = True, help = "path to the image file")
-args = vars(ap.parse_args())
+abs_path = os.path.abspath(__file__)
+current_path = os.path.dirname(abs_path)
+file_path = ""
+
+nArgParse = 0
+if nArgParse == 1 :
+	ap = argparse.ArgumentParser()
+	ap.add_argument("-i", "--image", required = True, help = "path to the image file")
+	args = vars(ap.parse_args())
+	
+	file_path = os.path.abspath(os.path.join(current_path, args["image"]))
+else:
+	file_path = os.path.abspath(os.path.join(current_path, "images\\barcode_03.jpg"))
 
 #read image
-image = cv.imread(args["image"])
+image = cv.imread(file_path)
 
 #gray image
 gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
@@ -44,4 +54,4 @@ box = np.int0(cv.boxPoints(rect))
 #
 cv.drawContours(image, [box], -1, (255, 0, 0), 5)
 cv.imshow("Image", image)
-cv.waitKey(0)
+cv.waitKey(0)	

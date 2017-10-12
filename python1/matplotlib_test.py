@@ -31,8 +31,8 @@ def matplotlib_test_part2():
 	plt.show() #显示作图结果
 
 def main():
-	matplotlib_test_part1()
-	#matplotlib_test_part2()
+	#matplotlib_test_part1()
+	matplotlib_test_part2()
 	#matplotlib_test_part3()
 	#matplotlib_test_part4()
 	

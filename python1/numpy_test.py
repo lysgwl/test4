@@ -27,6 +27,7 @@ def numpy_test_part1():
 	print(b)
 	b.shape = 3,4
 	print(b)
+	#print(b["arr_0"])
 
 def numpy_test_part2():
 	file_path = os.path.abspath(os.path.join(current_path, 'a2.npz'))
@@ -106,6 +107,6 @@ def main():
 	#numpy_test_part2()
 	#numpy_test_part3()
 	#numpy_test_part4()
-	#numpy_test_part5()
+	numpy_test_part5()
 if __name__=='__main__':
 	main()

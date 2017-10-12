@@ -108,7 +108,7 @@ def main():
     if not args:
         #print(os.curdir)
         args = [os.curdir]
-
+
     wq = WorkQ()
     for dir in args:
         wq.addwork(find, (dir, selector, wq))
