@@ -23,8 +23,10 @@ if __name__=='__main__':
 '''
 #part2:
 a = 123 #10-2
-print ("the value is : %s" % a)
+b = "the value is:{result}".format(result=a)
+print (b)
 '''
+
 '''
 def part2_test1(param1):
 	n1 = param1 + 1;

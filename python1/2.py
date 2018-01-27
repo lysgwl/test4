@@ -39,6 +39,7 @@ def get_net():
 def update_env():
 	get_net()
 
+#https://www.cnblogs.com/jackyspy/p/6027385.html
 def wait_net_exit():
 	
 	def http_request(url, method="GET"):
