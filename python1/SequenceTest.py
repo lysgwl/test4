@@ -48,8 +48,29 @@ def StringTest1():
 		print(str1)
 		
 	def test3():
+		#列表测试1
+		list1 = [123, 'abc', 4.56, ['test1', 'test2']]
+		print(list1[0])
+		print(list1[0:2])
+		print(list1[:3])
 		
-	
+		list1[1] = 'cba'
+		print(list1)
+		
+		del list1[0]
+		list1.remove('cba')
+		print(list1)
+		del list1
+		
+		#列表测试2
+		list1 = ['abc', 123]
+		list2 = ['xyz', 789]
+		print(list1>list2)
+		
+		#列表测试3
+		
+		
+	test3()
 def main():
 	StringTest1()
 	
