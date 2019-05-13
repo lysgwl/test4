@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+
 import os
 import re
 import sys
@@ -6,9 +7,8 @@ import time
 import random
 import string
 
-'''
 import ConfigParser
-'''
+
 ###################################################################
 '''
 #part1:
@@ -22,8 +22,8 @@ if __name__=='__main__':
 '''
 
 ###################################################################
-'''
 #part2:
+'''
 a = 123 #10-2
 b = "the value is:{result}".format(result=a)
 print (b)
