@@ -155,13 +155,16 @@ def main():
 			flag = True
 			os.system("cls")
 		elif ret == 1 :
+			flag = False
 			numpy_test_part1()
-			break
 		elif ret == 2 :
+			flag = False
 			numpy_test_part2()
 		elif ret == 3 :	
+			flag = False
 			numpy_test_part3()
 		elif ret == 4 :	
+			flag = False
 			numpy_test_part4()
 			
 if __name__=='__main__':
