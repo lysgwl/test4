@@ -13,9 +13,11 @@ current_path = os.path.dirname(abs_path)
 root_path = os.path.abspath(os.path.join(current_path, os.pardir))
 download_path = os.path.abspath(os.path.join(current_path, 'downloads'))
 
-def get_download_file():
+def download_urldata(url) :
 
-	def get_download_file(url, file):
+	def get_urldata_size(url) :
+	
+	def get_urlData_info(url, file) :
 		try:
 			req = request.urlopen(url)
 			CHUNK = 16*1024
@@ -28,7 +30,7 @@ def get_download_file():
 		except:
 			return False
 			
-	def get_url_version(file):
+	def get_url_version(file) :
 		try:
 			fd = open(file, 'r')
 			lines = fd.readlines()
@@ -43,25 +45,9 @@ def get_download_file():
 		except:
 			raise "get_url_version failed!" % file
 		
-	download_url = "https://www.blog.pythonlibrary.org/2012/06/07/python-101-how-to-download-a-file/"
-	download_file = os.path.join(download_path, "test1")
-	
-	if not os.path.isdir(download_path):
-		os.mkdir(download_path)
-		
-	if not get_download_file(download_url, download_file):
-		raise "download file failed!" % download_url
-	
-	net_url, net_version = get_url_version(download_file)
-	net_unzip_path = os.path.join(download_path, "net-%s" % net_version)
-	net_zip_path = os.path.join(download_path, "net-%s.zip" % net_version)
-	
-	if not get_download_file(net_url, net_zip_path):
-		raise "download file failed!" % download_url
-		
-		
 def main():
-	get_download_file()
+	download_url = "http://192.168.2.172/sdkMethod/userNumberRuleClass.php"
+	download_urldata(download_url)
 	
 if __name__ == "__main__":
 	main()
