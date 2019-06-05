@@ -10,11 +10,14 @@ def numpy_test_part1():
 	file_path = os.path.abspath(os.path.join(current_path, 'a1.bin'))
 	a = np.arange(15).reshape(3,5)	#arange(最小值,最大值,步长)(左闭右开)
 	print("array a:%s"%a)
+	print("array a:%s"%a.T)									#转置(矩阵)数组: T属性 mT[x][y] = m[y][x]
+	print("array a:%s"%(np.dot(a,a.T)))						#计算(矩阵)内积: xTx
+	a = np.arange(8).reshape(2,2,2)
 	#print("array a: shape=%d, ndim=%d"%(a.shape, a.ndim))	#数组的维度	#数组的行数	
 	#print("array a: type=%s, itemsize=%d"%(a.dtype.name, a.itemsize))	#数组的类型名称 #数组中每个元素字节的大小
 	#print(type(a))
-	print("array a: size=%d, sum=%d"%(a.size, a.sum()))
-	print("array a: min=%d, max=%d\n"%(a.min(), a.max()))
+	#print("array a: size=%d, sum=%d"%(a.size, a.sum()))
+	#print("array a: min=%d, max=%d\n"%(a.min(), a.max()))
 	
 	b = np.ones([10, 10])
 	b = np.zeros([10, 10])
@@ -43,6 +46,11 @@ def numpy_test_part1():
 	d = d.astype(np.int32)
 	d = d*2
 	print("array d:%s"%d)
+	
+	e = np.random.randint(0,2,size=10000)
+	e = (e>0).sum()
+	e = np.random.normal(size=(2,2))	#正态分布随机数数组
+	print("array e:%s"%e)
 
 def numpy_test_part2():
 	file_path = os.path.abspath(os.path.join(current_path, 'a2.npz'))
