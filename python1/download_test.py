@@ -19,15 +19,19 @@ download_path = os.path.abspath(os.path.join(current_path, 'downloads'))
 def get_urlData_info(url, dataBuf) :
 	try:
 		req = request.urlopen(url)
+		
 		CHUNK = 16*1024
-		with open(dataBuf, 'wb') as fp:
-			while True:
-				chunk = req.read(CHUNK)
-				if not chunk: break
-				fp.write(chunk)	
+		while True:
+			chunk = req.read(CHUNK)
+			if not chunk : break
+			dataBuf.write(chunk)
 		return True
+		
 	except:
 		return False
+		
+def get_userData_info(dataBuf) :
+	print("userData!")
 		
 def get_url_version(dataBuf) :
 	try:
@@ -45,9 +49,12 @@ def get_url_version(dataBuf) :
 			raise "get_url_version failed!" % dataBuf
 	
 def download_urldata(url) :
-	dataBuf = StringIO()
+	dataBuf = BytesIO()
 	if not get_urlData_info(url, dataBuf) :
 		return
+		
+	print("len=%d, data=%s"%(dataBuf.tell(), dataBuf.getvalue()))
+	dataBuf.close()
 	
 def main():
 	download_url = "http://192.168.2.172/sdkMethod/userNumberRuleClass.php"
