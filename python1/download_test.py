@@ -56,6 +56,23 @@ def download_urldata(url) :
 	print("len=%d, data=%s"%(dataBuf.tell(), dataBuf.getvalue()))
 	dataBuf.close()
 	
+def set_urllogin(url, user, passwd) :
+	headers = {
+				'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+				'Accept-Encoding': 'gzip, deflate, sdch',
+				'Accept-Language': 'en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4,zh-TW;q=0.2',
+				'Connection': 'keep-alive',
+				'Host': 'www.baidu.com',
+				'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36',
+				'Referer': 'http://www.baidu.com',
+			}
+	
+	login_data = {
+				'_xsrf': 'test',
+				'password': 'test',
+				'remember_me': 'true',
+				'email': 'test',		
+			}
 def main():
 	download_url = "http://192.168.2.172/sdkMethod/userNumberRuleClass.php"
 	download_urldata(download_url)
