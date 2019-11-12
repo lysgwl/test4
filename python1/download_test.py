@@ -9,6 +9,7 @@ import zipfile
 from io import StringIO
 from io import BytesIO
 from urllib import request
+from urllib import parse as urlparse
 
 abs_path = os.path.abspath(__file__)
 current_path = os.path.dirname(abs_path)
@@ -16,7 +17,42 @@ current_path = os.path.dirname(abs_path)
 root_path = os.path.abspath(os.path.join(current_path, os.pardir))
 download_path = os.path.abspath(os.path.join(current_path, 'downloads'))
 
-def get_urlData_info(url, dataBuf) :
+def get_filename(url, openurl=False) :
+	try :
+		if openurl == False :
+			return os.path.basename(url)
+		
+		req = request.urlopen(url)
+		if req.info().has_key('Content-Disposition') :
+			filename = req.info()['Content-Disposition'].split('filename=')[1]
+			filename = filename.replace('"', '').replace("'", "")
+			return filename
+		elif req.url != url	:
+			return os.path.basename(urlparse.urlsplit(req.url)[2])
+		else :
+			return os.path.basename(url)
+	except :
+		return os.path.basename(url)
+		
+def get_parseurl(url, openurl=None) :
+	result = urlparse.urlsplit(url)
+	urlpath = "%s:\\%s\%s"%(result.scheme, result.netloc, result.path)
+		
+def get_urlfilesize(url) :
+	try :
+		req = request.urlopen(url)
+		headers = req.info().headers
+		
+		length = 0
+		for header in headers :
+			if header.find('Length') != -1 :
+				length = header.split(':')[-1].strip
+				length = int(length)
+		return length
+	except :
+		return -1
+	
+def get_urldata(url, dataBuf) :
 	try:
 		req = request.urlopen(url)
 		
@@ -29,52 +65,14 @@ def get_urlData_info(url, dataBuf) :
 		
 	except:
 		return False
-		
-def get_userData_info(dataBuf) :
-	print("userData!")
-		
-def get_url_version(dataBuf) :
-	try:
-		fd = open(dataBuf, 'r')
-		lines = fd.readlines()
-			
-		p = re.compile(r'https://www.baidu.com/([0-9]+)\.([0-9]+)\.([0-9]+)')
-			
-		for line in lines:
-			m = p.match(line)
-			if m:
-				version = m.group(1) + "." + m.group(2) + "." + m.group(3)
-		return m.group(0), version
-	except:
-			raise "get_url_version failed!" % dataBuf
-	
+				
 def download_urldata(url) :
 	dataBuf = BytesIO()
-	if not get_urlData_info(url, dataBuf) :
-		return
-		
-	print("len=%d, data=%s"%(dataBuf.tell(), dataBuf.getvalue()))
-	dataBuf.close()
+	print(get_urlfilesize(url))
 	
-def set_urllogin(url, user, passwd) :
-	headers = {
-				'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-				'Accept-Encoding': 'gzip, deflate, sdch',
-				'Accept-Language': 'en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4,zh-TW;q=0.2',
-				'Connection': 'keep-alive',
-				'Host': 'www.baidu.com',
-				'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36',
-				'Referer': 'http://www.baidu.com',
-			}
-	
-	login_data = {
-				'_xsrf': 'test',
-				'password': 'test',
-				'remember_me': 'true',
-				'email': 'test',		
-			}
 def main():
-	download_url = "http://192.168.2.172/sdkMethod/userNumberRuleClass.php"
+	#download_url = "http://192.168.2.172/sdkMethod/userNumberRuleClass.php"
+	download_url = "http://168.130.6.18/login.php"
 	download_urldata(download_url)
 	
 if __name__ == "__main__":
