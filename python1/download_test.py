@@ -65,20 +65,22 @@ class DownloadFile() :
 		except :
 			return -1
 			
-	def get_urldata(self, dataBuf) :
-		try :
-			
+	def get_urldata(self, *args) :
+		print(self.url)
+		req = request.urlopen(self.url)
+		print(req.info())
+		
+		#try :
 			#req = request.urlopen(self.url)
-			
 			#CHUNK = 16*1024
 			#while True:
 			#	chunk = req.read(CHUNK)
 			#	if not chunk : break
 			#	dataBuf.write(chunk)
-			print(self.url)
-			return True
-		except :
-			return False
+			#print(self.url)
+			#return True
+		#except :
+		#	return
 
 class DownloadUrl() :
 	def __init__(self, url, path, blocks=5, proxies=None) :
@@ -90,6 +92,17 @@ class DownloadUrl() :
 	def get_parseurl(self, openurl=None) :
 		result = urlparse.urlsplit(self.url)
 		urlpath = "%s:\\%s\%s"%(result.scheme, result.netloc, result.path)
+		
+	def set_datablocks(self, totalsize, blocks) :
+		ranges = []
+		if totalsize < (1024*1024) :
+			ranges.append((0, totalsize))
+		else :
+			blocksize = totalsize / blocks	
+			for i in range(0, blocks - 1):
+				ranges.append((int(i*blocksize), int(i*blocksize+blocksize-1)))
+			ranges.append((int(blocksize*(blocks-1)), int(totalsize-1)))
+		return ranges
 
 	def download_urldata(self) :
 		urlfile = DownloadFile(self.url, self.proxies)
@@ -97,14 +110,23 @@ class DownloadUrl() :
 		#if totalsize <= 0 :
 		#	return
 		
-		tasks = []
+		totalsize = 10
 		dataBuf = BytesIO()
 		
-		for i in range(0, self.blocks) :
-			task = DownloadThread(urlfile.get_urldata, (dataBuf,), "111")
+		#req = request.urlopen(self.url, timeout=10)
+		#print(req.info())
+		
+		ranges = self.set_datablocks(totalsize, self.blocks)
+		threadname = ["thread_%d" % i for i in range(0, len(ranges))]
+		
+		tasks = []
+		for i in range(0, len(ranges)) :
+			task = DownloadThread(urlfile.get_urldata, (dataBuf,ranges[i],), threadname[i])
 			task.setDaemon(True)
 			task.start()
 			tasks.append(task)
+			
+		#print(dataBuf.getvalue())	
 	
 def main():
 	#download_url = "http://192.168.2.172/sdkMethod/userNumberRuleClass.php"
