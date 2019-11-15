@@ -66,21 +66,19 @@ class DownloadFile() :
 			return -1
 			
 	def get_urldata(self, *args) :
-		print(self.url)
-		req = request.urlopen(self.url)
-		print(req.info())
-		
-		#try :
-			#req = request.urlopen(self.url)
+		try :
+			res = request.urlopen(self.url)
+			print(res.info())
+			#print(res.info().headers)
+			print(re.read())
 			#CHUNK = 16*1024
 			#while True:
 			#	chunk = req.read(CHUNK)
 			#	if not chunk : break
 			#	dataBuf.write(chunk)
 			#print(self.url)
-			#return True
-		#except :
-		#	return
+		except :
+			return
 
 class DownloadUrl() :
 	def __init__(self, url, path, blocks=5, proxies=None) :
@@ -112,10 +110,7 @@ class DownloadUrl() :
 		
 		totalsize = 10
 		dataBuf = BytesIO()
-		
-		#req = request.urlopen(self.url, timeout=10)
-		#print(req.info())
-		
+
 		ranges = self.set_datablocks(totalsize, self.blocks)
 		threadname = ["thread_%d" % i for i in range(0, len(ranges))]
 		
@@ -126,7 +121,8 @@ class DownloadUrl() :
 			task.start()
 			tasks.append(task)
 			
-		#print(dataBuf.getvalue())	
+		print(len(tasks))
+		tasks[0].join()	
 	
 def main():
 	#download_url = "http://192.168.2.172/sdkMethod/userNumberRuleClass.php"
