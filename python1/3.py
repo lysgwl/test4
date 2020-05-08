@@ -88,6 +88,11 @@ def setTupList(mode, startCaller, startCallee, endCaller, endCallee):
     else:
         listLen = endCallerNum - startCallerNum
 
+    dataList = []
+    listLen = listLen + 1
+
+    #for i in range(listLen):
+
 def test1():
     setTupList(1, '16188880001', '16188885001', '16188880020', '16188885020')
 
@@ -96,11 +101,11 @@ def test2():
     if len(data) == 0:
         return
 
-    getTupList(data)
+    #getTupList(data)
 
 def main():
-    test1()
-    #test2()
+    #test1()
+    test2()
 
 if __name__ == "__main__" :
 	main()
