@@ -2,6 +2,7 @@
 import os
 import re
 import sys
+import cgi
 
 from io import StringIO
 from io import BytesIO
@@ -9,7 +10,7 @@ from io import BytesIO
 from time import ctime
 from contextlib import closing
 
-from urllib import request
+from urllib import request,error
 from urllib import parse as urlparse
 from threading import Thread, Lock
 
@@ -19,119 +20,97 @@ current_path = os.path.dirname(abs_path)
 root_path = os.path.abspath(os.path.join(current_path, os.pardir))
 download_path = os.path.abspath(os.path.join(current_path, 'downloads'))
 
-class DownloadThread(Thread) :
-	def __init__(self, func, args, name='') :
+class userThread(Thread):
+	def __init__(self, func, args, name=''):
 		Thread.__init__(self)
 		self.func = func
 		self.args = args
 		self.name = name
-		
-	def run(self) :
+
+	def run(self):
 		self.res = self.func(*self.args)
-		
-	def result(self) :
+
+	def result(self):
 		return self.res
-		
-class DownloadFile() :
-	def __init__(self, url, proxies=None) :	
-		self.url = url
-		self.proxies = proxies
-		
-	def get_filename(self, openurl=False) :
-		try :
-			if openurl == False :
-				return os.path.basename(self.url)
-				
-			req = request.urlopen(self.url)
-			if req.info().has_key('Content-Disposition') :
-				filename = req.info()['Content-Disposition'].split('filename=')[1]
-				filename = filename.replace('"', '').replace("'", "")
-				return filename
-			elif req.url != self.url	:
-				return os.path.basename(urlparse.urlsplit(req.url)[2])
-			else :
-				return os.path.basename(self.url)
-		except :
-			return os.path.basename(self.url)
-			
-	def get_filesize(self) :
-		try :
-			with closing (request.urlopen(self.url, self.proxies)) as req :
-				length = req.info().get('Content-Length')
-			if length is None :
-				return 0
-			else :
-				return int(length)
-		except :
-			return -1
-			
-	def get_urldata(self, *args) :
-		try :
-			res = request.urlopen(self.url)
-			print(res.info())
-			#print(res.info().headers)
-			print(re.read())
-			#CHUNK = 16*1024
-			#while True:
-			#	chunk = req.read(CHUNK)
-			#	if not chunk : break
-			#	dataBuf.write(chunk)
-			#print(self.url)
-		except :
-			return
 
-class DownloadUrl() :
-	def __init__(self, url, path, blocks=5, proxies=None) :
+class userUrl():
+	def __init__(self, url):
 		self.url = url
-		self.path = path
-		self.blocks = blocks
-		self.proxies = proxies
+		
+	def setjoinurl(self, urlscheme, urllocation, urlpath, urlparam):
+		url = urlparse.urlunparse((urlscheme, urllocation, urlpath, '', '', ''))
+		newurl = urlparse.urljoin(url, urlparam)
 			
-	def get_parseurl(self, openurl=None) :
+	def setparseurl(self):
 		result = urlparse.urlsplit(self.url)
-		urlpath = "%s:\\%s\%s"%(result.scheme, result.netloc, result.path)
-		
-	def set_datablocks(self, totalsize, blocks) :
-		ranges = []
-		if totalsize < (1024*1024) :
-			ranges.append((0, totalsize))
-		else :
-			blocksize = totalsize / blocks	
-			for i in range(0, blocks - 1):
-				ranges.append((int(i*blocksize), int(i*blocksize+blocksize-1)))
-			ranges.append((int(blocksize*(blocks-1)), int(totalsize-1)))
-		return ranges
 
-	def download_urldata(self) :
-		urlfile = DownloadFile(self.url, self.proxies)
-		#totalsize = urlfile.get_filesize()
-		#if totalsize <= 0 :
-		#	return
-		
-		totalsize = 10
-		dataBuf = BytesIO()
+	def getfilename(self, flag=False):
+		if flag == False:
+			return os.path.basename(self.url)
+		else:
+			result = urlparse.urlsplit(self.url)
+			len1 = len(result.path) - 1
 
-		ranges = self.set_datablocks(totalsize, self.blocks)
-		threadname = ["thread_%d" % i for i in range(0, len(ranges))]
-		
-		tasks = []
-		for i in range(0, len(ranges)) :
-			task = DownloadThread(urlfile.get_urldata, (dataBuf,ranges[i],), threadname[i])
-			task.setDaemon(True)
-			task.start()
-			tasks.append(task)
-			
-		print(len(tasks))
-		tasks[0].join()	
-	
+			while len1 > 0:
+				if result.path[len1] == '/':
+					break
+				len1 = len1 - 1
+
+			filename = result.path[len1+1:len(result.path)]
+			if not filename.strip():
+				return False
+			return filename		
+
+class downloadUrl():
+	def __init__(self, url, proxies=None):
+		self.url = url
+		self.proxies = proxies
+
+	def getfilesize(self):
+		try:
+			with closing(request.urlopen(self.url, self.proxies)) as req:
+				if req.getheader('Content-Length') == None:
+					length = 0
+				else:	
+					length = req.info().get('Content-Length')
+		except:
+			length = -1
+		return length	
+
+	def getfilename(self, openurl=False):
+		try:
+			filename = userUrl(self.url).getfilename()
+
+			if openurl == True:
+				req = request.urlopen(self.url)		#addinfourl对象
+
+				headers = req.getheaders()  		#二元元组列表
+				headerinfo = req.info()  			#HTTPMessage对象
+
+				if req.getheader('Content-Disposition') != None:
+					if 'Content-Disposition' in headers and headers['Content-Disposition']:
+						s = headers['Content-Disposition'].split(';')
+				elif req.getheader('Location') != None:
+					print("test1")
+
+		except error.URLError as e:
+			print(e.reason, ":", e.code)
+			print(e.headers)
+
+		return filename		
+
+class downloadFile()
+	def __init__(self):
+
+	def setdatablocks():
+
+	def downloadfile():
+
 def main():
-	#download_url = "http://192.168.2.172/sdkMethod/userNumberRuleClass.php"
-	download_url = "http://168.130.6.18/login.php"
-	#download_url = "https://www.baidu.com"
-	#download_url = "https://archive.mozilla.org/pub/seamonkey/releases/2.49.5/win32/en-US/seamonkey-2.49.5.installer.exe"
-	
-	download = DownloadUrl(download_url, "d:\\")
-	download.download_urldata()
-	
+	#url = "http://168.130.9.162:8289/login.php"
+	url = "https://archive.mozilla.org/pub/seamonkey/releases/2.49.5/win32/en-US/seamonkey-2.49.5.installer.exe"
+
+	download_url = downloadUrl(url)
+
 if __name__ == "__main__":
 	main()
