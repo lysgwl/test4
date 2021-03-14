@@ -75,7 +75,7 @@ class downloadUrl():
 					length = req.info().get('Content-Length')
 		except:
 			length = -1
-		return length	
+		return int(length)	
 
 	def getfilename(self, openurl=False):
 		try:
@@ -99,18 +99,60 @@ class downloadUrl():
 
 		return filename		
 
-class downloadFile()
-	def __init__(self):
+	def getfiledata(self, *args):
+		try:
+			#req = request.urlopen(self.url)
+			print(self.url)
+		except:
+			return
 
-	def setdatablocks():
+class downloadFile():
+	def __init__(self, url, blocks=5, proxies=None):
+		self.url = url
+		self.blocks = blocks
+		self.proxies = proxies
 
-	def downloadfile():
+	def setdatablocks(self, totalsize):
+		ranges = []
+		if totalsize < (1024*1024) :
+			ranges.append((0, totalsize))
+		else:
+			blocksize = totalsize / self.blocks	
+			for i in range(0, self.blocks-1):
+				ranges.append((int(i*blocksize), int(i*blocksize+blocksize-1)))
+			ranges.append((int(blocksize*(self.blocks-1)), int(totalsize-1)))
+		return ranges
+
+	def downloaddata(self, *args):
+		download_url = downloadUrl(self.url)
+		download_url.getfiledata(args)
+
+	def downloadfile(self, path):
+		download_url = downloadUrl(self.url)
+		filesize = download_url.getfilesize()
+		if filesize <= 0:
+			return
+		
+		dataBuf = BytesIO()
+
+		ranges = self.setdatablocks(filesize)
+		threadname = ["thread_%d" % i for i in range(0, len(ranges))]
+
+		tasks = []
+		for i in range(0, len(ranges)):
+			task = userThread(self.downloaddata, (dataBuf,ranges[i],), threadname[i])
+			task.setDaemon(True)
+			task.start()
+			tasks.append(task)
+
+		tasks[0].join()		
 
 def main():
 	#url = "http://168.130.9.162:8289/login.php"
 	url = "https://archive.mozilla.org/pub/seamonkey/releases/2.49.5/win32/en-US/seamonkey-2.49.5.installer.exe"
 
-	download_url = downloadUrl(url)
+	download_file = downloadFile(url)
+	download_file.downloadfile("")
 
 if __name__ == "__main__":
 	main()
