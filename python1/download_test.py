@@ -124,8 +124,9 @@ class downloadFile():
 		return ranges
 
 	def downloaddata(self, *args):
-		download_url = downloadUrl(self.url)
-		download_url.getfiledata(args)
+		#download_url = downloadUrl(self.url)
+		#download_url.getfiledata(args)
+		print(self.url)
 
 	def downloadfile(self, path):
 		download_url = downloadUrl(self.url)
