@@ -151,6 +151,7 @@ class downloadFile():
 def main():
 	#url = "http://168.130.9.162:8289/login.php"
 	url = "https://archive.mozilla.org/pub/seamonkey/releases/2.49.5/win32/en-US/seamonkey-2.49.5.installer.exe"
+	#filename = url.split('/')[-1]
 
 	download_file = downloadFile(url)
 	download_file.downloadfile("")
