@@ -21,11 +21,10 @@ root_path = os.path.abspath(os.path.join(current_path, os.pardir))
 download_path = os.path.abspath(os.path.join(current_path, 'downloads'))
 
 class userThread(Thread):
-	def __init__(self, func, args, name=''):
+	def __init__(self, func, args):
 		Thread.__init__(self)
 		self.func = func
 		self.args = args
-		self.name = name
 
 	def run(self):
 		self.res = self.func(*self.args)
@@ -107,10 +106,11 @@ class downloadUrl():
 			return
 
 class downloadFile():
-	def __init__(self, url, blocks=5, proxies=None):
+	def __init__(self, url, blocks=1, proxies=None):
 		self.url = url
 		self.blocks = blocks
 		self.proxies = proxies
+		self.downloaded = 0
 
 	def setdatablocks(self, totalsize):
 		ranges = []
@@ -124,34 +124,68 @@ class downloadFile():
 		return ranges
 
 	def downloaddata(self, *args):
-		#download_url = downloadUrl(self.url)
-		#download_url.getfiledata(args)
-		print(self.url)
+		if (len(args) != 3) :
+			return
+
+		filename = args[0]
+		ranges = args[1]
+		threadname = args[2]
+
+		#print(self.url, filename, ranges, threadname)
+		self.startpoint = ranges[0] + self.downloaded
+		if (self.startpoint >= ranges[1]):
+			return
+
+		self.addheader("Range", "bytes=%d-%d" % (self.startpoint, ranges[1]))
+		self.urlhandle = self.open(self.url)
+
+		self.oneTimeSize = 16384
+		data = self.urlhandle.read(self.oneTimeSize)
+		while data:
+			filehandle = open(filename, 'ab+')
+			filehandle.write(data)
+			filehandle.close()
+
+	def isalivetask(tasks):
+		for task in tasks:
+			if task.isAlive():
+				return True;
+		return False;	
 
 	def downloadfile(self, path):
 		download_url = downloadUrl(self.url)
+
 		filesize = download_url.getfilesize()
 		if filesize <= 0:
 			return
 		
-		dataBuf = BytesIO()
-
+		#dataBuf = BytesIO()
 		ranges = self.setdatablocks(filesize)
-		threadname = ["thread_%d" % i for i in range(0, len(ranges))]
+
+		filename = ["file_%d" % i for i in range(0, self.blocks)]
+		threadname = ["thread_%d" % i for i in range(0, self.blocks)]
 
 		tasks = []
 		for i in range(0, len(ranges)):
-			task = userThread(self.downloaddata, (dataBuf,ranges[i],), threadname[i])
+			varlist = [filename[i], ranges[i], threadname[i]]
+			task = userThread(self.downloaddata, varlist) 	#(dataBuf,ranges[i],)
 			task.setDaemon(True)
 			task.start()
 			tasks.append(task)
 
-		tasks[0].join()		
+		tasks[0].join();	
+
+		#ctime.sleep(2)
+		#while isalivetask(tasks):
+		#	ctime.sleep(0.5)	
 
 def main():
 	#url = "http://168.130.9.162:8289/login.php"
 	url = "https://archive.mozilla.org/pub/seamonkey/releases/2.49.5/win32/en-US/seamonkey-2.49.5.installer.exe"
-	#filename = url.split('/')[-1]
+
+	filename = url.split('/')[-1]
+	if (filename.strip() == '') :
+		return;
 
 	download_file = downloadFile(url)
 	download_file.downloadfile("")
