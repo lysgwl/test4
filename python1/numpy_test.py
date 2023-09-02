@@ -24,7 +24,7 @@ def numpy_test_part1():
 	b = np.random.rand(10, 10)		#创建指定形状(示例为10行10列)的数组(范围在0至1之间)
 	b = np.empty((10, 10))
 	b = np.random.uniform(0, 100)	#创建指定范围内的一个数
-	b = np.random.randint(0, 100)	#创建指定范围内的一个整数
+	b = np.random.randint(0, 100)	1#创建指定范围内的一个整数
 	b = np.random.normal(1.75, 0.1, (4,5))
 	b = b[1:3, 2:4]					#截取第1至2行的第2至3列(从第0行算起)
 	print("array b:%s\n"%b)

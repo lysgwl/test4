@@ -131,7 +131,6 @@ class downloadFile():
 		ranges = args[1]
 		threadname = args[2]
 
-		#print(self.url, filename, ranges, threadname)
 		self.startpoint = ranges[0] + self.downloaded
 		if (self.startpoint >= ranges[1]):
 			return

@@ -1,0 +1,17 @@
+[33mWARN[0m[2023-09-02 21:50:52] not enable search                            
+[33mWARN[0m[2023-09-02 21:50:52] not enable search                            
+[GIN] 2023/09/02 - 21:51:12 | 200 |            0s |    192.168.1.10 | GET      "/"
+[GIN] 2023/09/02 - 21:51:13 | 200 |       499.1µs |    192.168.1.10 | GET      "/api/public/settings"
+[GIN] 2023/09/02 - 21:51:13 | 200 |       498.9µs |    192.168.1.10 | GET      "/api/me"
+[GIN] 2023/09/02 - 21:51:18 | 200 |       553.5µs |    192.168.1.10 | POST     "/api/auth/login/hash"
+[GIN] 2023/09/02 - 21:51:18 | 200 |       499.5µs |    192.168.1.10 | GET      "/api/me"
+[31mERRO[0m[2023-09-02 21:51:19] failed list /: storage not found; please add a storage first
+failed get storage 
+[GIN] 2023/09/02 - 21:51:19 | 200 |       498.1µs |    192.168.1.10 | POST     "/api/fs/get"
+[31mERRO[0m[2023-09-02 21:51:19] failed list /: storage not found; please add a storage first
+failed get storage 
+[GIN] 2023/09/02 - 21:51:19 | 200 |       499.1µs |    192.168.1.10 | POST     "/api/fs/list"
+[GIN] 2023/09/02 - 21:51:20 | 200 |            0s |    192.168.1.10 | GET      "/api/me"
+[GIN] 2023/09/02 - 21:51:27 | 200 |       499.1µs |    192.168.1.10 | POST     "/api/me/update"
+[GIN] 2023/09/02 - 21:51:34 | 200 |       237.2µs |    192.168.1.10 | POST     "/api/auth/login/hash"
+[GIN] 2023/09/02 - 21:51:34 | 200 |        45.1µs |    192.168.1.10 | GET      "/api/me"
