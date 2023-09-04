@@ -11,24 +11,28 @@ class RunModule:
         self.process = ProcessMgr()
 
     def run(self, apptype):
-        if apptype is not None:
-            app = self.factory.getAppModule(apptype)
-            if app is None:
-                return
-            
-            command_tuple = app.get()
-            if len(command_tuple) > 0:
-                command_str = ' '.join(command_tuple)
-                self.process.start_process(self.config.system_type, command_str)
-        else:
-            applist = self.factory.getAppModule(None)
-            for app in applist:
+        try:
+            if apptype is not None:
+                app = self.factory.getAppModule(apptype)
                 if app is None:
-                    continue
-
+                    return
+                
                 command_tuple = app.get()
                 if len(command_tuple) > 0:
                     command_str = ' '.join(command_tuple)
                     self.process.start_process(self.config.system_type, command_str)
+            else:
+                applist = self.factory.getAppModule(None)
+                for app in applist:
+                    if app is None:
+                        continue
 
-        self.process.wait_for_processes()
+                    command_tuple = app.get()
+                    if len(command_tuple) > 0:
+                        command_str = ' '.join(command_tuple)
+                        self.process.start_process(self.config.system_type, command_str)
+
+            self.process.wait_for_processes()
+        except Exception as e:
+            print("An error occurred in RunModule.run:", str(e))
+        

@@ -28,25 +28,28 @@ class AlistModule(Component):
         self.alist_admin_file = os.path.join(self.alist_bin_path, "admin_passwd.txt")
         
     def init(self):
-        command = f"where {self.alist_file_extension}" if self.system_type == 'windows' else f"which {self.alist_file_extension}"
-        returncode, stdout, stderr = funchelper.run_process_command(command)
-        if returncode == 0 and stdout:
-            self.alist_installed = True
-            self.alist_bin_file = stdout
-        else:
-            self.alist_installed = False
-            self.alist_bin_file = os.path.join(self.alist_bin_path, self.alist_file_extension)
+        try:
+            command = f"where {self.alist_file_extension}" if self.system_type == 'windows' else f"which {self.alist_file_extension}"
+            returncode, stdout, stderr = funchelper.run_process_command(command)
+            if returncode == 0 and stdout:
+                self.alist_installed = True
+                self.alist_bin_file = stdout
+            else:
+                self.alist_installed = False
+                self.alist_bin_file = os.path.join(self.alist_bin_path, self.alist_file_extension)
 
-        self.alist_server_command = f"{self.alist_bin_file}"  
-        self.alist_server_command += f" server --data "  
-        self.alist_server_command += f"{self.alist_etc_path} "  # &>/dev/null &
+            self.alist_server_command = f"{self.alist_bin_file}"  
+            self.alist_server_command += f" server --data "  
+            self.alist_server_command += f"{self.alist_etc_path} "  # &>/dev/null &
 
-        self.alist_admin_command = f"{self.alist_bin_file}"
-        self.alist_admin_command += f" admin --data "
-        self.alist_admin_command += f"{self.alist_etc_path}"
+            self.alist_admin_command = f"{self.alist_bin_file}"
+            self.alist_admin_command += f" admin --data "
+            self.alist_admin_command += f"{self.alist_etc_path}"
 
-        os.makedirs(self.alist_bin_path, exist_ok=True)
-        os.makedirs(self.alist_etc_path, exist_ok=True)
+            os.makedirs(self.alist_bin_path, exist_ok=True)
+            os.makedirs(self.alist_etc_path, exist_ok=True)
+        except Exception as e:
+            print("An error occurred in AlistModule:", str(e))
 
     def get(self):
         if not self.alist_server_command:
@@ -56,26 +59,30 @@ class AlistModule(Component):
         return command_tuple
 
     def exec(self):
-        if self.alist_installed:
-            pass
-        else:
-            funchelper.copy_process_files(self.config.data_path, self.alist_usr_path, self.alist_name, self.alist_filename_pattern)
-        
-            if not os.path.exists(self.alist_bin_path) or os.path.exists(self.alist_bin_file):
-                return
+        try:
+            if self.alist_installed:
+                pass
+            else:
+                funchelper.copy_process_files(self.config.data_path, self.alist_usr_path, self.alist_name, self.alist_filename_pattern)
             
-            filepath = funchelper.find_latest_files(self.alist_usr_path, self.alist_filename_pattern)
-            if not filepath:
-                self._downloadPackages()
+                if not os.path.exists(self.alist_bin_path) or os.path.exists(self.alist_bin_file):
+                    return
                 
-            if len(filepath) == 0:
-                return
-            
-            # 安装alist软件包
-            self._installPackages(filepath)
+                filepath = funchelper.find_latest_files(self.alist_usr_path, self.alist_filename_pattern)
+                if not filepath:
+                    self._downloadPackages()
+                    
+                if len(filepath) == 0:
+                    return
+                
+                # 安装alist软件包
+                self._installPackages(filepath)
 
-            # 设置alist环境
-            self._setalistenv()    
+                # 设置alist环境
+                self._setalistenv() 
+                
+        except Exception as e:
+            print("An error occurred in AlistModule:", str(e))
 
     def _downloadPackages(self):
         pass
@@ -92,7 +99,7 @@ class AlistModule(Component):
         self._setalistjsoncfg()
 
         # 获取alist的管理密码
-        returncode, stdout, stderr = funchelper.run_process_command(self.alist_admin_command)
+        returncode, stdout, stderr = funchelper.run_process_command(self.alist_admin_command, "'latin-1")
 
         user_info = stdout or stderr
         json_array = [

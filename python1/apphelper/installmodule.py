@@ -9,11 +9,17 @@ class InstallModule:
         self.factory = AppFactory.getInstance()
         
     def add(self, apptype):
-        app = self.factory.createAppModule(apptype, self.config)
-        if app is not None:
-            app.init()
+        try:
+            app = self.factory.createAppModule(apptype, self.config)
+            if app is not None:
+                app.init()
+        except Exception as e:
+            print("An error occurred in InstallModule.add:", str(e))
 
     def run(self):
-        applist = self.factory.getAppModule(None)
-        for app in applist:
-            app.exec()
+        try:
+            applist = self.factory.getAppModule(None)
+            for app in applist:
+                app.exec()
+        except Exception as e:
+            print("An error occurred in InstallModule.run:", str(e))

@@ -5,7 +5,7 @@ class ProcessMgr:
     def __init__(self):
         self.processes = []
 
-    def start_process(self, system_type, command):
+    def start_process(self, system_type, command, encode_type=None):
         if system_type.lower() == 'windows':
             startupinfo = subprocess.STARTUPINFO()
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
@@ -19,8 +19,11 @@ class ProcessMgr:
             stdout =  subprocess.DEVNULL
             stderr =  subprocess.DEVNULL
 
-        process = subprocess.Popen(command, shell=True, stdout=stdout, stderr=stderr, startupinfo=startupinfo)
-        self.processes.append(process)
+        try:
+            process = subprocess.Popen(command, shell=True, stdout=stdout, stderr=stderr, startupinfo=startupinfo, encoding=encode_type)
+            self.processes.append(process)
+        except subprocess.CalledProcessError as e:
+            print(f"子进程引发异常: 异常类型:{type(e)}, 错误号:{e.returncode}, 错误消息:{e.stderr}")
 
     def pause_processes(self):
         for process in self.processes:

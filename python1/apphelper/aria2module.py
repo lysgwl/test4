@@ -28,24 +28,27 @@ class Aria2Module(Component):
         self.arai2_session_file = os.path.join(self.aria2_etc_path, f"{self.aria2_name}.session")
         
     def init(self):
-        command = f"where {self.aria2_file_extension}" if self.system_type == 'windows' else f"which {self.aria2_file_extension}"
-        returncode, stdout, stderr = funchelper.run_process_command(command)
-        if returncode == 0 and stdout:
-            self.aria2_installed = True
-            self.aria2_bin_file = stdout
-        else:
-            self.aria2_installed = False
-            self.aria2_bin_file = os.path.join(self.aria2_bin_path, self.aria2_file_extension)
-        
-        self.aria2_server_command = f"{self.aria2_bin_file}"
-        self.aria2_server_command += f" --conf-path={self.aria2_cfg_file}"
-        self.aria2_server_command += f" --dht-file-path={self.aria2_dht_file}"
-        self.aria2_server_command += f" --dht-file-path6={self.aria2_dht6_file}"
-        self.aria2_server_command += f" --input-file={self.arai2_session_file}"
-        self.aria2_server_command += f" --save-session={self.arai2_session_file}"
+        try:
+            command = f"where {self.aria2_file_extension}" if self.system_type == 'windows' else f"which {self.aria2_file_extension}"
+            returncode, stdout, stderr = funchelper.run_process_command(command)
+            if returncode == 0 and stdout:
+                self.aria2_installed = True
+                self.aria2_bin_file = stdout
+            else:
+                self.aria2_installed = False
+                self.aria2_bin_file = os.path.join(self.aria2_bin_path, self.aria2_file_extension)
+            
+            self.aria2_server_command = f"{self.aria2_bin_file}"
+            self.aria2_server_command += f" --conf-path={self.aria2_cfg_file}"
+            self.aria2_server_command += f" --dht-file-path={self.aria2_dht_file}"
+            self.aria2_server_command += f" --dht-file-path6={self.aria2_dht6_file}"
+            self.aria2_server_command += f" --input-file={self.arai2_session_file}"
+            self.aria2_server_command += f" --save-session={self.arai2_session_file}"
 
-        os.makedirs(self.aria2_bin_path, exist_ok=True)
-        os.makedirs(self.aria2_etc_path, exist_ok=True)
+            os.makedirs(self.aria2_bin_path, exist_ok=True)
+            os.makedirs(self.aria2_etc_path, exist_ok=True)
+        except Exception as e:
+            print("An error occurred in Aria2Module:", str(e))
 
     def get(self):
         if not self.aria2_server_command:
@@ -55,29 +58,33 @@ class Aria2Module(Component):
         return command_tuple
 
     def exec(self):
-        if self.aria2_installed:
-            self._setaria2env() 
-        else:    
-            funchelper.copy_process_files(self.config.data_path, self.aria2_usr_path, self.aria2_name, self.aria2_filename_pattern)
-            
-            if not os.path.exists(self.aria2_bin_path) or os.path.exists(self.aria2_bin_file):
-                return
-            
-            filepath = funchelper.find_latest_files(self.aria2_usr_path, self.aria2_filename_pattern)
-            if not filepath:
-                self._downloadPackages()
-                    
-            if len(filepath) == 0:
-                return
+        try:
+            if self.aria2_installed:
+                self._setaria2env() 
+            else:    
+                funchelper.copy_process_files(self.config.data_path, self.aria2_usr_path, self.aria2_name, self.aria2_filename_pattern)
                 
-            # 安装软件包
-            self._installPackages(filepath)
-            
-            funchelper.search_and_copy_files(self.aria2_bin_path, self.aria2_file_extension)
-            
-            # 设置环境
-            self._setaria2env() 
-
+                if not os.path.exists(self.aria2_bin_path) or os.path.exists(self.aria2_bin_file):
+                    return
+                
+                filepath = funchelper.find_latest_files(self.aria2_usr_path, self.aria2_filename_pattern)
+                if not filepath:
+                    self._downloadPackages()
+                        
+                if len(filepath) == 0:
+                    return
+                    
+                # 安装软件包
+                self._installPackages(filepath)
+                
+                funchelper.search_and_copy_files(self.aria2_bin_path, self.aria2_file_extension)
+                
+                # 设置环境
+                self._setaria2env() 
+                
+        except Exception as e:
+            print("An error occurred in AlistModule:", str(e))
+ 
     def _downloadPackages(self):
         pass
 

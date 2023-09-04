@@ -88,9 +88,9 @@ class funchelper(object):
             print("This file format is not supported!", file_path)
 
     # 检查进程是否在运行中
-    def check_process_running(system_type, process_id, process_name=None):
-        def run_command(command):
-            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True) 
+    def check_process_running(system_type, process_id, process_name=None, encode_type=None):
+        def run_command(encode_type, command):
+            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, encoding=encode_type) 
             stdout, stderr = process.communicate()
             returncode = process.returncode
             if returncode != 0:
@@ -99,7 +99,7 @@ class funchelper(object):
             
         if process_id is not None:
             command = f'tasklist /FI "PID eq {process_id}"' if system_type.lower() == 'windows' else f'ps -p {process_id}'
-            stdout = run_command(command)
+            stdout = run_command(encode_type, command)
             if not stdout:
                 return False
             
@@ -111,7 +111,7 @@ class funchelper(object):
             
         if process_name is not None:
             command = f'tasklist /FI "IMAGENAME eq {process_name}" /NH' if system_type.lower() == 'windows' else f'pgrep {process_name}'
-            stdout = run_command(command)
+            stdout = run_command(encode_type, command)
             if not stdout:
                 return False
             
@@ -123,7 +123,7 @@ class funchelper(object):
             return True
     
     # 运行指定进程服务
-    def run_process_server(system_type, command_args):
+    def run_process_server(system_type, command_args, encode_type=None):
         if system_type.lower() == 'windows':
             startupinfo = subprocess.STARTUPIFO()
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
@@ -132,20 +132,20 @@ class funchelper(object):
             # creationflags=subprocess.DETACHED_PROCESS
             # creationflags=subprocess.CREATE_NO_WINDOW
             # creationflags=subprocess.CREATE_NEW_CONSOLE  # process.communicate()
-            process = subprocess.Popen(command_args, shell=True, startupinfo=startupinfo)
+            process = subprocess.Popen(command_args, shell=True, startupinfo=startupinfo, encoding=encode_type)
         elif system_type.lower() == 'linux':
-            subprocess.Popen(command_args, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.Popen(command_args, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, encoding=encode_type)
         else:
             print("Unsupported system type!")
         return
     
     # 运行指定命令,并返回状态码和信息
-    def run_process_command(command_args):
-        process = subprocess.Popen(command_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True) 
+    def run_process_command(command_args, encode_type=None):
+        process = subprocess.Popen(command_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, encoding=encode_type) 
         stdout, stderr = process.communicate()
 
-        stdout = stdout.strip()
-        stderr = stderr.strip()
+        stdout = stdout.strip() if stdout else ''
+        stderr = stderr.strip() if stderr else ''  
         returncode = process.returncode
 
         return returncode, stdout, stderr
