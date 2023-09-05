@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+import os
 import subprocess
 
 class ProcessMgr:
@@ -20,7 +21,9 @@ class ProcessMgr:
             stderr =  subprocess.DEVNULL
 
         try:
+            # 启动一个新的子进程
             process = subprocess.Popen(command, shell=True, stdout=stdout, stderr=stderr, startupinfo=startupinfo, encoding=encode_type)
+            # 将子进程对象 process 添加到 self.processes 列表中
             self.processes.append(process)
         except subprocess.CalledProcessError as e:
             print(f"子进程引发异常: 异常类型:{type(e)}, 错误号:{e.returncode}, 错误消息:{e.stderr}")

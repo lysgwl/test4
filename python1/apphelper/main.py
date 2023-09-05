@@ -47,5 +47,8 @@ def main():
         # 删除运行实例
         config.remove_run_instance()
 
+        # 停止所有子进程
+        run_module.stop()
+
 if __name__ == '__main__': 
     main()

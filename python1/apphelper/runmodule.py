@@ -21,6 +21,7 @@ class RunModule:
                 if len(command_tuple) > 0:
                     command_str = ' '.join(command_tuple)
                     self.process.start_process(self.config.system_type, command_str)
+                    
             else:
                 applist = self.factory.getAppModule(None)
                 for app in applist:
@@ -36,3 +37,5 @@ class RunModule:
         except Exception as e:
             print("An error occurred in RunModule.run:", str(e))
         
+    def stop(self):
+        self.process.stop_processes()
